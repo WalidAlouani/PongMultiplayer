@@ -11,7 +11,7 @@ public class ScoreZone : MonoBehaviour
         if (collision.gameObject.name == "Ball")
         {
             _score++;
-            Debug.Log(_score);
+            //Debug.Log(_score);
         }
     }
 }

@@ -3,10 +3,16 @@ using System.Collections;
 
 public class MoveRacket : MonoBehaviour {
     public float speed = 30;
-    public string axis = "Vertical";
+    public float Movement { get; internal set; }
+    private Rigidbody2D _rigibody;
 
-    void FixedUpdate () {
-        float v = Input.GetAxisRaw(axis);
-        GetComponent<Rigidbody2D>().velocity = new Vector2(0, v) * speed;
+    private void Awake()
+    {
+        _rigibody = GetComponent<Rigidbody2D>();
+    }
+
+    public void UpdateLogic() 
+    {
+        _rigibody.velocity = new Vector2(0, Movement) * speed;
     }
 }

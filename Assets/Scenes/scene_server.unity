@@ -745,7 +745,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 30
-  axis: Vertical2
 --- !u!1 &1185447387
 GameObject:
   m_ObjectHideFlags: 0
@@ -918,7 +917,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 30
-  axis: Vertical
 --- !u!1 &1266940942
 GameObject:
   m_ObjectHideFlags: 0
@@ -1520,6 +1518,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0d69719ce8d5c04ba0739cd67954414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ball: {fileID: 1085037895}
+  _racketLeft: {fileID: 1185447392}
+  _racketRight: {fileID: 1129486185}
 --- !u!4 &1633818113
 Transform:
   m_ObjectHideFlags: 0
