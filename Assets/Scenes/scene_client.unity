@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7f3413e796ade54b8197a7c5802efed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ball: {fileID: 1085037891}
+  _ball: {fileID: 1085037895}
   _racketLeft: {fileID: 1185447387}
   _racketRight: {fileID: 1129486180}
 --- !u!4 &232451348
@@ -469,6 +469,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1085037894}
   - component: {fileID: 1085037893}
+  - component: {fileID: 1085037895}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -544,6 +545,18 @@ Transform:
   - {fileID: 1757122065}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1085037895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085037891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c570573d4050c49bd41bbb40923daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1129486180
 GameObject:
   m_ObjectHideFlags: 0

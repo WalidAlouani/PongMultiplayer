@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class GameClient : MonoBehaviour, INetEventListener
 {
@@ -16,9 +15,10 @@ public class GameClient : MonoBehaviour, INetEventListener
 
     private LocalPlayer _playerLocal;
     private RemotePlayer _playerRemote;
+    private float _lerpTime;
 
     [SerializeField]
-    private GameObject _ball;
+    private ClientBall _ball;
     [SerializeField]
     private GameObject _racketLeft;
     [SerializeField]
@@ -45,7 +45,11 @@ public class GameClient : MonoBehaviour, INetEventListener
         if (_serverPeer == null || _serverPeer.ConnectionState != ConnectionState.Connected)
             return;
 
-        _playerLocal.UpdateLogic();
+        _playerLocal.UpdateLogic(_lerpTime);
+        _playerRemote.UpdateLogic(_lerpTime);
+        _ball.UpdateLogic(_lerpTime);
+
+        _lerpTime += Time.deltaTime / Time.fixedDeltaTime;
     }
 
     void OnDestroy()
@@ -102,18 +106,23 @@ public class GameClient : MonoBehaviour, INetEventListener
             _playerLocal.View = _racketLeft;
             _playerRemote.View = _racketRight;
 
-            _playerLocal.View.transform.position = new Vector2(_playerLocal.View.transform.position.x, packet.Player1.PositionY);
-            _playerRemote.View.transform.position = new Vector2(_playerRemote.View.transform.position.x, packet.Player2.PositionY);
+            _playerLocal.ReceiveState(packet.Player1.PositionY);
+            _playerRemote.ReceiveState(packet.Player2.PositionY);
+
         }
         else if (peer.RemoteId == packet.Player2.PlayerId)
         {
             _playerLocal.View = _racketRight;
             _playerRemote.View = _racketLeft;
 
-            _playerLocal.View.transform.position = new Vector2(_playerLocal.View.transform.position.x, packet.Player2.PositionY);
-            _playerRemote.View.transform.position = new Vector2(_playerRemote.View.transform.position.x, packet.Player1.PositionY);
+            _playerLocal.ReceiveState(packet.Player2.PositionY);
+            _playerRemote.ReceiveState(packet.Player1.PositionY);
         }
 
-        _ball.transform.position = new Vector2(packet.Ball.PositionX, packet.Ball.PositionY);
+
+        _ball.ReceiveState(new Vector2(packet.Ball.PositionX, packet.Ball.PositionY));
+
+
+        _lerpTime = 0f;
     }
 }
