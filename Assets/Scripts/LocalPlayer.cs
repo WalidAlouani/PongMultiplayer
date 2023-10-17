@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class LocalPlayer
 {
-    public NetPeer NetPeer;
-    public MoveRacket View;
+    //public NetPeer NetPeer;
+    public GameObject View;
 
     private GameClient gameClient;
     public string axis = "Vertical2";

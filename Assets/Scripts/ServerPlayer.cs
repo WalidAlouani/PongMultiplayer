@@ -18,4 +18,18 @@ public class ServerPlayer
     {
         View.UpdateLogic();
     }
+
+    internal PlayerState GetState()
+    {
+        return new PlayerState()
+        {
+            PlayerId = NetPeer == null ? -1 : NetPeer.Id,
+            PositionY = View.transform.position.y,
+        };
+    }
+
+    internal void Disconnect()
+    {
+        NetPeer = null;
+    }
 }

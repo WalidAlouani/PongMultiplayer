@@ -5,6 +5,6 @@ using UnityEngine;
 
 public class RemotePlayer
 {
-    public NetPeer NetPeer;
-    public MoveRacket View;
+    //public NetPeer NetPeer;
+    public GameObject View;
 }

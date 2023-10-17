@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Ball : MonoBehaviour
 {
@@ -9,6 +10,12 @@ public class Ball : MonoBehaviour
     {
         // Initial Velocity
         GetComponent<Rigidbody2D>().velocity = Vector2.right * speed;
+    }
+
+    public void Stop()
+    {
+        // Initial Velocity
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
     float hitFactor(Vector2 ballPos, Vector2 racketPos,
@@ -60,5 +67,14 @@ public class Ball : MonoBehaviour
             // Set Velocity with dir * speed
             GetComponent<Rigidbody2D>().velocity = dir * speed;
         }
+    }
+
+    internal LNLVector2 GetState()
+    {
+        return new LNLVector2()
+        {
+            PositionX = transform.position.x,
+            PositionY = transform.position.y,
+        };
     }
 }

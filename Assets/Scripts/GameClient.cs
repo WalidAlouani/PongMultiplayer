@@ -1,10 +1,12 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class GameClient : MonoBehaviour, INetEventListener
 {
@@ -16,22 +18,24 @@ public class GameClient : MonoBehaviour, INetEventListener
     private RemotePlayer _playerRemote;
 
     [SerializeField]
-    private Ball _ball;
+    private GameObject _ball;
     [SerializeField]
-    private MoveRacket _racketLeft;
+    private GameObject _racketLeft;
     [SerializeField]
-    private MoveRacket _racketRight;
+    private GameObject _racketRight;
 
     void Start()
     {
+        _netPacketProcessor.RegisterNestedType<PlayerState>();
+        _netPacketProcessor.RegisterNestedType<LNLVector2>();
+        _netPacketProcessor.SubscribeReusable<GameStatePacket, NetPeer>(GameStatePacketReceived);
+
         _netClient = new NetManager(this);
         _netClient.Start();
         _netClient.Connect("localhost", 5000, "pong_app");
 
         _playerLocal = new LocalPlayer(this);
-        _playerLocal.View = _racketRight;
         _playerRemote = new RemotePlayer();
-        _playerRemote.View = _racketLeft;
     }
 
     void Update()
@@ -87,5 +91,29 @@ public class GameClient : MonoBehaviour, INetEventListener
         };
 
         _netPacketProcessor.Send(_serverPeer, packet, DeliveryMethod.ReliableSequenced);
+    }
+
+    //Receiver
+
+    private void GameStatePacketReceived(GameStatePacket packet, NetPeer peer)
+    {
+        if (peer.RemoteId == packet.Player1.PlayerId)
+        {
+            _playerLocal.View = _racketLeft;
+            _playerRemote.View = _racketRight;
+
+            _playerLocal.View.transform.position = new Vector2(_playerLocal.View.transform.position.x, packet.Player1.PositionY);
+            _playerRemote.View.transform.position = new Vector2(_playerRemote.View.transform.position.x, packet.Player2.PositionY);
+        }
+        else if (peer.RemoteId == packet.Player2.PlayerId)
+        {
+            _playerLocal.View = _racketRight;
+            _playerRemote.View = _racketLeft;
+
+            _playerLocal.View.transform.position = new Vector2(_playerLocal.View.transform.position.x, packet.Player2.PositionY);
+            _playerRemote.View.transform.position = new Vector2(_playerRemote.View.transform.position.x, packet.Player1.PositionY);
+        }
+
+        _ball.transform.position = new Vector2(packet.Ball.PositionX, packet.Ball.PositionY);
     }
 }

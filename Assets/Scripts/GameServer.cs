@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class GameServer : MonoBehaviour, INetEventListener
 {
@@ -24,6 +25,8 @@ public class GameServer : MonoBehaviour, INetEventListener
 
     void Start()
     {
+        _netPacketProcessor.RegisterNestedType<PlayerState>();
+        _netPacketProcessor.RegisterNestedType<LNLVector2>();
         _netPacketProcessor.SubscribeReusable<PlayerInputsPacket, NetPeer>(PlayerInputsPacketReceived);
 
         _netServer = new NetManager(this);
@@ -48,6 +51,8 @@ public class GameServer : MonoBehaviour, INetEventListener
     {
         _player1.UpdateLogic();
         _player2.UpdateLogic();
+
+        SendGameState(_player1.GetState(), _player2.GetState(), _ball.GetState());
     }
 
 
@@ -88,13 +93,28 @@ public class GameServer : MonoBehaviour, INetEventListener
     public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
         Debug.Log("[SERVER] peer disconnected " + peer.EndPoint + ", info: " + disconnectInfo.Reason);
+
+        if (_player1.NetPeer == peer)
+            _player1.Disconnect();
+        else if(_player2.NetPeer == peer)
+            _player2.Disconnect();
+
+        if (_player1.NetPeer == null && _player2.NetPeer == null)
+            _ball.Stop();
     }
 
     //Sender
+    internal void SendGameState(PlayerState player1, PlayerState player2, LNLVector2 ballPosition)
+    {
+        var packet = new GameStatePacket()
+        {
+            Player1 = player1,
+            Player2 = player2,
+            Ball = ballPosition,
+        };
 
-
-
-
+        _netServer.SendToAll(_netPacketProcessor.Write(packet), DeliveryMethod.ReliableSequenced);
+    }
 
     //Receiver
     private void PlayerInputsPacketReceived(PlayerInputsPacket packet, NetPeer peer)

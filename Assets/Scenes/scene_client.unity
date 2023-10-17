@@ -152,6 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7f3413e796ade54b8197a7c5802efed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ball: {fileID: 1085037891}
+  _racketLeft: {fileID: 1185447387}
+  _racketRight: {fileID: 1129486180}
 --- !u!4 &232451348
 Transform:
   m_ObjectHideFlags: 0
