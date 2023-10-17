@@ -75,11 +75,29 @@ public class GameServer : MonoBehaviour, INetEventListener
     public void OnConnectionRequest(ConnectionRequest request)
     {
         if (_player1.NetPeer == null)
-            _player1.NetPeer = request.AcceptIfKey("pong_app");
+        {
+            var peer = request.AcceptIfKey("pong_app");
+            _player1.NetPeer = peer;
+            var packet = new ClientSidePacket()
+            {
+                LeftSide = true,
+            };
+            peer.Send(_netPacketProcessor.Write(packet), DeliveryMethod.ReliableOrdered);
+        }
         else if (_player2.NetPeer == null)
-            _player2.NetPeer = request.AcceptIfKey("pong_app");
+        {
+            var peer = request.AcceptIfKey("pong_app");
+            _player2.NetPeer = peer;
+            var packet = new ClientSidePacket()
+            {
+                LeftSide = false,
+            };
+            peer.Send(_netPacketProcessor.Write(packet), DeliveryMethod.ReliableOrdered);
+        }
         else
+        {
             request.Reject();
+        }
     }
 
     public void OnPeerConnected(NetPeer peer)
@@ -96,7 +114,7 @@ public class GameServer : MonoBehaviour, INetEventListener
 
         if (_player1.NetPeer == peer)
             _player1.Disconnect();
-        else if(_player2.NetPeer == peer)
+        else if (_player2.NetPeer == peer)
             _player2.Disconnect();
 
         if (_player1.NetPeer == null && _player2.NetPeer == null)

@@ -28,6 +28,7 @@ public class GameClient : MonoBehaviour, INetEventListener
     {
         _netPacketProcessor.RegisterNestedType<PlayerState>();
         _netPacketProcessor.RegisterNestedType<LNLVector2>();
+        _netPacketProcessor.SubscribeReusable<ClientSidePacket, NetPeer>(ClientSidePacketReceived);
         _netPacketProcessor.SubscribeReusable<GameStatePacket, NetPeer>(GameStatePacketReceived);
 
         _netClient = new NetManager(this);
@@ -98,30 +99,37 @@ public class GameClient : MonoBehaviour, INetEventListener
     }
 
     //Receiver
+    private void ClientSidePacketReceived(ClientSidePacket packet, NetPeer peer)
+    {
+        if (packet.LeftSide)
+        {
+            _playerLocal.View = _racketLeft;
+            _racketLeft.GetComponent<Renderer>().material.color = Color.blue;
+            _playerRemote.View = _racketRight;
+        }
+        else
+        {
+            _playerLocal.View = _racketRight;
+            _racketRight.GetComponent<Renderer>().material.color = Color.blue;
+            _playerRemote.View = _racketLeft;
+        }
+    }
 
     private void GameStatePacketReceived(GameStatePacket packet, NetPeer peer)
     {
         if (peer.RemoteId == packet.Player1.PlayerId)
         {
-            _playerLocal.View = _racketLeft;
-            _playerRemote.View = _racketRight;
-
             _playerLocal.ReceiveState(packet.Player1.PositionY);
             _playerRemote.ReceiveState(packet.Player2.PositionY);
 
         }
         else if (peer.RemoteId == packet.Player2.PlayerId)
         {
-            _playerLocal.View = _racketRight;
-            _playerRemote.View = _racketLeft;
-
             _playerLocal.ReceiveState(packet.Player2.PositionY);
             _playerRemote.ReceiveState(packet.Player1.PositionY);
         }
 
-
         _ball.ReceiveState(new Vector2(packet.Ball.PositionX, packet.Ball.PositionY));
-
 
         _lerpTime = 0f;
     }

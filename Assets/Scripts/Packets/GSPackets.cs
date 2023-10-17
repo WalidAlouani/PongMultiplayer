@@ -49,3 +49,9 @@ struct LNLVector2 : INetSerializable
         PositionY = reader.GetFloat();
     }
 }
+
+
+class ClientSidePacket
+{
+    public bool LeftSide { get; set; }
+}
