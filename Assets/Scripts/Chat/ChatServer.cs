@@ -73,7 +73,7 @@ namespace Chat
                 Sender = "Player" + peer.Id,
                 Content = packet.Content,
             };
-            _netServer.SendToAll(_netPacketProcessor.Write(packet1), DeliveryMethod.ReliableSequenced);
+            _netServer.SendToAll(_netPacketProcessor.Write(packet1), DeliveryMethod.ReliableOrdered);
         }
     }
 }

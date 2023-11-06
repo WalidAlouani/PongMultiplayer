@@ -20,6 +20,12 @@ namespace Chat
             sendButton.onClick.AddListener(SendMessage);
         }
 
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.Return))
+                SendMessage();
+        }
+
         public void SendMessage()
         {
             var content = inputField.text;
@@ -27,6 +33,7 @@ namespace Chat
                 return;
 
             inputField.text = string.Empty;
+            //inputField.Select();
 
             chatClient.SendChatMessage(content);
         }
@@ -34,7 +41,7 @@ namespace Chat
         public void ReceiveMessage(string sender, string content)
         {
             var message = Instantiate(messagePrefab, scrollRect.content);
-            message.GetComponent<Text>().text = "[" + sender + "] : " + content;
+            message.GetComponent<Text>().text = "<color=lime><b>[" + sender + "]</b></color> : " + content;
             Task.Delay(100);
 
             StartCoroutine(UpdateScrollBar());
@@ -42,7 +49,8 @@ namespace Chat
 
         IEnumerator UpdateScrollBar()
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
             scrollRect.verticalScrollbar.value = 0;
         }
     }

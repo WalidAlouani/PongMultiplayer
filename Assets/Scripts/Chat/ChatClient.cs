@@ -70,7 +70,7 @@ namespace Chat
                 Content = content,
             };
 
-            _netPacketProcessor.Send(_serverPeer, packet, DeliveryMethod.ReliableSequenced);
+            _netPacketProcessor.Send(_serverPeer, packet, DeliveryMethod.ReliableOrdered);
         }
 
         //Receiver
