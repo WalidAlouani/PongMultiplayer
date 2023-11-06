@@ -33,7 +33,7 @@ namespace Chat
                 return;
 
             inputField.text = string.Empty;
-            //inputField.Select();
+            inputField.ActivateInputField();
 
             chatClient.SendChatMessage(content);
         }
