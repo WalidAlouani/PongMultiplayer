@@ -346,6 +346,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4633b924432a4f247a471350e0500823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _buttonConnect: {fileID: 1882417612}
+  _textConnect: {fileID: 653901560}
+  _client: {fileID: 232451349}
 --- !u!1 &653901558
 GameObject:
   m_ObjectHideFlags: 0

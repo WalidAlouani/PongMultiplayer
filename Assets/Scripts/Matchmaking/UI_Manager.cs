@@ -1,21 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Matchmaking
 {
     public class UI_Manager : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
+        [SerializeField] private Button _buttonConnect;
+        [SerializeField] private Text _textConnect;
+        [SerializeField] private MatchmakingClient _client;
 
+        void Awake()
+        {
+            _buttonConnect.onClick.AddListener(_client.Connect);
         }
 
-        // Update is called once per frame
         void Update()
         {
-
+            _textConnect.text = _client.IsConnected ? "Disconnect" : "Connect";
         }
     }
 }

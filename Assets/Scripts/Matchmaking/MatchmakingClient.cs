@@ -14,11 +14,20 @@ namespace Matchmaking
         private readonly NetPacketProcessor _netPacketProcessor = new NetPacketProcessor();
         private NetPeer _serverPeer;
 
+        public bool IsConnected => _serverPeer != null && _serverPeer.ConnectionState == ConnectionState.Connected;
+
         void Start()
         {
             _netClient = new NetManager(this);
             _netClient.Start();
-            _netClient.Connect("localhost", 7000, "matchmaking_app");
+        }
+
+        public void Connect()
+        {
+            if (!IsConnected)
+                _netClient.Connect("localhost", 7000, "matchmaking_app");
+            else
+                _netClient.DisconnectAll();
         }
 
         void Update()
@@ -59,7 +68,7 @@ namespace Matchmaking
         }
 
         ///Senders
-        
+
         ///Receivers
 
 

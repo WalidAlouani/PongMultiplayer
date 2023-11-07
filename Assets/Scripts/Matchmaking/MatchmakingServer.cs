@@ -31,17 +31,10 @@ namespace Matchmaking
                 _netServer.Stop();
         }
 
-        public void OnNetworkError(IPEndPoint endPoint, SocketError socketError)
-        {
-        }
-        public void OnNetworkLatencyUpdate(NetPeer peer, int latency)
-        {
-        }
-        public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
-        {
-        }
-
-
+        public void OnNetworkError(IPEndPoint endPoint, SocketError socketError) { }
+        public void OnNetworkLatencyUpdate(NetPeer peer, int latency) { }
+        public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) { }
+        
         public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channelNumber, DeliveryMethod deliveryMethod)
         {
             _netPacketProcessor.ReadAllPackets(reader, peer);
