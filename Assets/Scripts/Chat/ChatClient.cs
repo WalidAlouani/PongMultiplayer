@@ -18,6 +18,8 @@ namespace Chat
         void Start()
         {
             _netPacketProcessor.SubscribeReusable<ServerMessagePacket, NetPeer>(ServerMessagePacketReceived);
+            _netPacketProcessor.SubscribeReusable<PlayerJoinedPacket, NetPeer>(PlayerJoinedPacketReceived);
+            _netPacketProcessor.SubscribeReusable<PlayerLeftPacket, NetPeer>(PlayerLeftPacketReceived);
 
             _netClient = new NetManager(this);
             _netClient.Start();
@@ -77,6 +79,16 @@ namespace Chat
         private void ServerMessagePacketReceived(ServerMessagePacket packet, NetPeer peer)
         {
             _uiManager.ReceiveMessage(packet.Sender, packet.Content);
+        }
+        
+        private void PlayerJoinedPacketReceived(PlayerJoinedPacket packet, NetPeer peer)
+        {
+            _uiManager.ReceiveJoinedMessage(packet.PlayerName);
+        }
+        
+        private void PlayerLeftPacketReceived(PlayerLeftPacket packet, NetPeer peer)
+        {
+            _uiManager.ReceiveLeftMessage(packet.PlayerName);
         }
     }
 }

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7039274368687022082}
   - component: {fileID: 1497677747664056564}
+  - component: {fileID: 7959964710856176171}
   - component: {fileID: 2082101244137059746}
   m_Layer: 5
   m_Name: Message
@@ -45,6 +46,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5695006316028246807}
   m_CullTransparentMesh: 1
+--- !u!114 &7959964710856176171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5695006316028246807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e81e528e5302244ead49b0b46d05750, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 2082101244137059746}
 --- !u!114 &2082101244137059746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,4 +92,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 

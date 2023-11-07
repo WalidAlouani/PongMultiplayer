@@ -1,5 +1,3 @@
-//C->S
-using LiteNetLib.Utils;
 namespace Chat
 {
     //C->S
@@ -13,5 +11,17 @@ namespace Chat
     {
         public string Sender { get; set; }
         public string Content { get; set; }
+    }
+
+    //S->C
+    class PlayerJoinedPacket
+    {
+        public string PlayerName { get; set; }
+    }
+
+    //S->C
+    class PlayerLeftPacket
+    {
+        public string PlayerName { get; set; }
     }
 }

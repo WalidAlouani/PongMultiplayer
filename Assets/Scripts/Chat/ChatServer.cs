@@ -50,30 +50,54 @@ namespace Chat
 
         public void OnConnectionRequest(ConnectionRequest request)
         {
-            var peer = request.AcceptIfKey("chat_app");
+            request.AcceptIfKey("chat_app");
         }
 
         public void OnPeerConnected(NetPeer peer)
         {
             Debug.Log("[SERVER] We have new peer " + peer.EndPoint);
+            PlayerJoinedPacketSend(peer.Id);
         }
 
         public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
             Debug.Log("[SERVER] peer disconnected " + peer.EndPoint + ", info: " + disconnectInfo.Reason);
+            PlayerLeftPacketSend(peer.Id);
         }
 
         //Sender
+        private void PlayerMessagePacketSend(string content, int playerId)
+        {
+            var packet = new ServerMessagePacket()
+            {
+                Sender = "Player" + playerId,
+                Content = content,
+            };
+            _netServer.SendToAll(_netPacketProcessor.Write(packet), DeliveryMethod.ReliableOrdered);
+        }
+
+        private void PlayerJoinedPacketSend(int playerId)
+        {
+            var packet = new PlayerJoinedPacket()
+            {
+                PlayerName = "Player" + playerId,
+            };
+            _netServer.SendToAll(_netPacketProcessor.Write(packet), DeliveryMethod.ReliableOrdered);
+        }
+
+        private void PlayerLeftPacketSend(int playerId)
+        {
+            var packet = new PlayerLeftPacket()
+            {
+                PlayerName = "Player" + playerId,
+            };
+            _netServer.SendToAll(_netPacketProcessor.Write(packet), DeliveryMethod.ReliableOrdered);
+        }
 
         //Receiver
         private void PlayerMessagePacketReceived(PlayerMessagePacket packet, NetPeer peer)
         {
-            var packet1 = new ServerMessagePacket()
-            {
-                Sender = "Player" + peer.Id,
-                Content = packet.Content,
-            };
-            _netServer.SendToAll(_netPacketProcessor.Write(packet1), DeliveryMethod.ReliableOrdered);
+            PlayerMessagePacketSend(packet.Content, peer.Id);
         }
     }
 }

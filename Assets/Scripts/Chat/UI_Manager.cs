@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Text;
 using System.Threading;
@@ -13,7 +14,7 @@ namespace Chat
         [SerializeField] private Button sendButton;
         [SerializeField] private InputField inputField;
         [SerializeField] private ScrollRect scrollRect;
-        [SerializeField] private GameObject messagePrefab;
+        [SerializeField] private Message messagePrefab;
 
         private void Awake()
         {
@@ -41,9 +42,21 @@ namespace Chat
         public void ReceiveMessage(string sender, string content)
         {
             var message = Instantiate(messagePrefab, scrollRect.content);
-            message.GetComponent<Text>().text = "<color=lime><b>[" + sender + "]</b></color> : " + content;
-            Task.Delay(100);
+            message.DisplayMessage(sender, content);
+            StartCoroutine(UpdateScrollBar());
+        }
 
+        internal void ReceiveJoinedMessage(string playerName)
+        {
+            var message = Instantiate(messagePrefab, scrollRect.content);
+            message.DisplayJoinedMessage(playerName);
+            StartCoroutine(UpdateScrollBar());
+        }
+        
+        internal void ReceiveLeftMessage(string playerName)
+        {
+            var message = Instantiate(messagePrefab, scrollRect.content);
+            message.DisplayLeftMessage(playerName);
             StartCoroutine(UpdateScrollBar());
         }
 

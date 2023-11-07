@@ -350,7 +350,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2010870624}
   m_HandleRect: {fileID: 2010870623}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -740,7 +740,7 @@ MonoBehaviour:
   sendButton: {fileID: 1882417612}
   inputField: {fileID: 621079179}
   scrollRect: {fileID: 1707510525}
-  messagePrefab: {fileID: 5695006316028246807, guid: 092bd51ffd378dd4fa6a4cbbfa3953b3, type: 3}
+  messagePrefab: {fileID: 7959964710856176171, guid: 092bd51ffd378dd4fa6a4cbbfa3953b3, type: 3}
 --- !u!1 &653901558
 GameObject:
   m_ObjectHideFlags: 0
