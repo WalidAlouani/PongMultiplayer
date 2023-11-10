@@ -13,6 +13,9 @@ public class RemotePlayer
 
     internal void UpdateLogic(float _lerpTime)
     {
+        if (View == null)
+            return;
+
         var pos = View.transform.position;
         pos.y = Mathf.Lerp(_oldPosY, _newPosY, _lerpTime);
         View.transform.position = pos;

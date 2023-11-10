@@ -24,6 +24,9 @@ public class LocalPlayer
     {
         gameClient.SendInputs(Input.GetAxisRaw(axis));
 
+        if (View == null)
+            return;
+
         var pos = View.transform.position;
         pos.y = Mathf.Lerp(_oldPosY, _newPosY, _lerpTime);
         View.transform.position = pos;
