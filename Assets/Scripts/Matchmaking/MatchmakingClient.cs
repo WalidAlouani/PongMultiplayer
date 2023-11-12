@@ -5,9 +5,12 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net;
 using UnityEngine;
+using System;
 
 namespace Matchmaking
 {
+    public delegate void Notify(bool isConnected);  // delegate
+
     public class MatchmakingClient : MonoBehaviour, INetEventListener
     {
         private NetManager _netClient;
@@ -15,6 +18,8 @@ namespace Matchmaking
         private NetPeer _serverPeer;
 
         public bool IsConnected => _serverPeer != null && _serverPeer.ConnectionState == ConnectionState.Connected;
+        public event Notify OnConnectedChanged; // event
+        //public Action<bool> OnConnectedChanged; // action
 
         void Start()
         {
@@ -25,7 +30,20 @@ namespace Matchmaking
         public void Connect()
         {
             if (!IsConnected)
-                _netClient.Connect("localhost", 7000, "matchmaking_app");
+            {
+                var writer = new NetDataWriter();
+                writer.Put("matchmaking_app");
+
+                //var packet = new JoinPacket()
+                //{
+                //    Key = "matchmaking_app",
+                //};
+
+                //var writer = NetDataWriter.FromBytes(_netPacketProcessor.Write(packet), false);
+
+                _netClient.Connect("localhost", 7000, writer);
+
+            }
             else
                 _netClient.DisconnectAll();
         }
@@ -59,12 +77,18 @@ namespace Matchmaking
         {
             Debug.Log("[CLIENT] We connected to " + peer.EndPoint);
             _serverPeer = peer;
+            OnConnectedChanged?.Invoke(IsConnected);
         }
 
         public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
             Debug.Log("[CLIENT] We disconnected because " + disconnectInfo.Reason);
             _serverPeer = null;
+            OnConnectedChanged?.Invoke(IsConnected);
+
+            //if (disconnectInfo.Reason == DisconnectReason.DisconnectPeerCalled)
+            //    if (disconnectInfo.AdditionalData.AvailableBytes > 0)
+            //        _netPacketProcessor.ReadPacket(disconnectInfo.AdditionalData);
         }
 
         ///Senders

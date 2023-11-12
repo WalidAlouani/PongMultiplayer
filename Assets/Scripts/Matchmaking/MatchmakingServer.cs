@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net;
 using UnityEngine;
+using System;
 
 namespace Matchmaking
 {
@@ -16,6 +17,8 @@ namespace Matchmaking
 
         void Start()
         {
+            _netPacketProcessor.SubscribeReusable<JoinPacket, NetPeer>(JoinPacketReceived);
+
             _netServer = new NetManager(this);
             _netServer.Start(7000);
         }
@@ -42,7 +45,14 @@ namespace Matchmaking
 
         public void OnConnectionRequest(ConnectionRequest request)
         {
-            request.AcceptIfKey("matchmaking_app");
+            //_netPacketProcessor.ReadPacket(request.Data);
+
+            var reader = request.Data;
+            var key = reader.GetString();
+            if (key.Equals("matchmaking_app"))
+                request.Accept();
+            else
+                request.Reject();
         }
 
         public void OnPeerConnected(NetPeer peer)
@@ -58,6 +68,11 @@ namespace Matchmaking
         ///Senders
 
         ///Receivers
+        ///
+        private void JoinPacketReceived(JoinPacket packet, NetPeer peer)
+        {
+            Debug.Log(packet.Key);
+        }
 
     }
 }

@@ -16,9 +16,24 @@ namespace Matchmaking
             _buttonConnect.onClick.AddListener(_client.Connect);
         }
 
-        void Update()
+        private void OnEnable()
         {
-            _textConnect.text = _client.IsConnected ? "Disconnect" : "Connect";
+            _client.OnConnectedChanged += OnConnectedChanged;
+        }
+
+        private void OnConnectedChanged(bool isConnected)
+        {
+            _textConnect.text = isConnected ? "Disconnect" : "Connect";
+        }
+
+        //void Update()
+        //{
+        //    _textConnect.text = _client.IsConnected ? "Disconnect" : "Connect";
+        //}
+
+        private void OnDisable()
+        {
+            _client.OnConnectedChanged -= OnConnectedChanged;
         }
     }
 }
