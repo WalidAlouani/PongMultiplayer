@@ -1,11 +1,9 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net;
 using UnityEngine;
-using System;
+using UnityEngine.SceneManagement;
 
 namespace Matchmaking
 {
@@ -19,7 +17,7 @@ namespace Matchmaking
 
         public bool IsConnected => _serverPeer != null && _serverPeer.ConnectionState == ConnectionState.Connected;
         public event Notify OnConnectedChanged; // event
-        //public Action<bool> OnConnectedChanged; // action
+        //public Action<bool> OnConnectedChanged; // event
 
         void Start()
         {
@@ -42,10 +40,11 @@ namespace Matchmaking
                 //var writer = NetDataWriter.FromBytes(_netPacketProcessor.Write(packet), false);
 
                 _netClient.Connect("localhost", 7000, writer);
-
             }
             else
+            {
                 _netClient.DisconnectAll();
+            }
         }
 
         void Update()
@@ -89,6 +88,21 @@ namespace Matchmaking
             //if (disconnectInfo.Reason == DisconnectReason.DisconnectPeerCalled)
             //    if (disconnectInfo.AdditionalData.AvailableBytes > 0)
             //        _netPacketProcessor.ReadPacket(disconnectInfo.AdditionalData);
+
+            if (disconnectInfo.Reason == DisconnectReason.RemoteConnectionClose)
+                if (disconnectInfo.AdditionalData.AvailableBytes > 0)
+                {
+                    if (!disconnectInfo.AdditionalData.TryGetInt(out var port))
+                        return;
+
+                    if (!disconnectInfo.AdditionalData.TryGetString(out var password))
+                        return;
+
+                    Debug.Log(port + " " + password);
+                    GameClient.GSPort = port;
+                    GameClient.GSPassword = password;
+                    SceneManager.LoadScene("scene_client");
+                }
         }
 
         ///Senders

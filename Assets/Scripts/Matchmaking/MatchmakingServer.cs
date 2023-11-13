@@ -15,6 +15,11 @@ namespace Matchmaking
         private NetManager _netServer;
         private readonly NetPacketProcessor _netPacketProcessor = new NetPacketProcessor();
 
+        private List<NetPeer> Peers = new List<NetPeer>();
+        private List<Room> Rooms = new List<Room>();
+
+        private int ports = 5000;
+
         void Start()
         {
             _netPacketProcessor.SubscribeReusable<JoinPacket, NetPeer>(JoinPacketReceived);
@@ -26,6 +31,22 @@ namespace Matchmaking
         void Update()
         {
             _netServer.PollEvents();
+
+            ProcessMatchmaking();
+        }
+
+        private void ProcessMatchmaking()
+        {
+            while (Peers.Count >= 2)
+            {
+                var peer1 = Peers[0];
+                Peers.RemoveAt(0);
+                var peer2 = Peers[0];
+                Peers.RemoveAt(0);
+
+                var room = new Room(peer1, peer2, ++ports);
+                Rooms.Add(room);
+            }
         }
 
         void OnDestroy()
@@ -58,11 +79,13 @@ namespace Matchmaking
         public void OnPeerConnected(NetPeer peer)
         {
             Debug.Log("[SERVER] We have new peer " + peer.EndPoint);
+            Peers.Add(peer);
         }
 
         public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
             Debug.Log("[SERVER] peer disconnected " + peer.EndPoint + ", info: " + disconnectInfo.Reason);
+            Peers.Remove(peer);
         }
 
         ///Senders

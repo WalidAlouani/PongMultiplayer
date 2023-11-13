@@ -1,17 +1,14 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class GameServer : MonoBehaviour, INetEventListener
 {
     private NetManager _netServer;
     private readonly NetPacketProcessor _netPacketProcessor = new NetPacketProcessor();
+    private string _key;
 
     private ServerPlayer _player1 = new ServerPlayer();
     private ServerPlayer _player2 = new ServerPlayer();
@@ -23,14 +20,24 @@ public class GameServer : MonoBehaviour, INetEventListener
     [SerializeField]
     private MoveRacket _racketRight;
 
+
     void Start()
     {
+        var portString = ArgsUtils.GetArg("-port");
+        if (portString == null)
+            Application.Quit();
+
+        if(!int.TryParse(portString, out var port))
+            Application.Quit();
+
+        _key = ArgsUtils.GetArg("-password");
+
         _netPacketProcessor.RegisterNestedType<PlayerState>();
         _netPacketProcessor.RegisterNestedType<LNLVector2>();
         _netPacketProcessor.SubscribeReusable<PlayerInputsPacket, NetPeer>(PlayerInputsPacketReceived);
 
         _netServer = new NetManager(this);
-        _netServer.Start(5000);
+        _netServer.Start(port);
 
         _player1.View = _racketLeft;
         _player2.View = _racketRight;
@@ -76,7 +83,7 @@ public class GameServer : MonoBehaviour, INetEventListener
     {
         if (_player1.NetPeer == null)
         {
-            var peer = request.AcceptIfKey("pong_app");
+            var peer = request.AcceptIfKey(_key);
             _player1.NetPeer = peer;
             var packet = new ClientSidePacket()
             {
@@ -86,7 +93,7 @@ public class GameServer : MonoBehaviour, INetEventListener
         }
         else if (_player2.NetPeer == null)
         {
-            var peer = request.AcceptIfKey("pong_app");
+            var peer = request.AcceptIfKey(_key);
             _player2.NetPeer = peer;
             var packet = new ClientSidePacket()
             {
@@ -118,7 +125,10 @@ public class GameServer : MonoBehaviour, INetEventListener
             _player2.Disconnect();
 
         if (_player1.NetPeer == null && _player2.NetPeer == null)
+        {
             _ball.Stop();
+            Application.Quit();
+        }
     }
 
     //Sender

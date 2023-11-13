@@ -6,15 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/scene_main.unity
-    guid: 89a84548859e3b643b4fb27984dc2b0d
+    path: Assets/Scenes/matchmaking_client.unity
+    guid: d43dc31e45cb1ac4da3efe996d873616
+  - enabled: 0
+    path: Assets/Scenes/matchmaking_server.unity
+    guid: 5a028348c02e4964da61df49907403ed
   - enabled: 0
     path: Assets/Scenes/scene_client.unity
     guid: 07206d906656fd7418203f0e5febe0e7
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/scene_server.unity
     guid: cdce0de9d17384943add9a679cf80b0c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/chat_client.unity
     guid: 65208fcbbcbda4540bc06a50e6cae635
   - enabled: 0

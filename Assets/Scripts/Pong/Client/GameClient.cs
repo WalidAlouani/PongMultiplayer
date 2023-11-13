@@ -1,14 +1,14 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
 public class GameClient : MonoBehaviour, INetEventListener
 {
+    public static int GSPort;
+    public static string GSPassword;
+
     private NetManager _netClient;
     private readonly NetPacketProcessor _netPacketProcessor = new NetPacketProcessor();
     private NetPeer _serverPeer;
@@ -33,7 +33,7 @@ public class GameClient : MonoBehaviour, INetEventListener
 
         _netClient = new NetManager(this);
         _netClient.Start();
-        _netClient.Connect("localhost", 5000, "pong_app");
+        _netClient.Connect("localhost", GSPort, GSPassword);
 
         _playerLocal = new LocalPlayer(this);
         _playerRemote = new RemotePlayer();
