@@ -16,7 +16,6 @@ namespace Matchmaking
         private readonly NetPacketProcessor _netPacketProcessor = new NetPacketProcessor();
 
         private List<NetPeer> Peers = new List<NetPeer>();
-        private List<Room> Rooms = new List<Room>();
 
         private int ports = 5000;
 
@@ -44,8 +43,10 @@ namespace Matchmaking
                 var peer2 = Peers[0];
                 Peers.RemoveAt(0);
 
-                var room = new Room(peer1, peer2, ++ports);
-                Rooms.Add(room);
+                new Room(peer1, peer2, ++ports);
+
+                if (ports >= 6000)
+                    ports = 5000;
             }
         }
 
@@ -58,7 +59,7 @@ namespace Matchmaking
         public void OnNetworkError(IPEndPoint endPoint, SocketError socketError) { }
         public void OnNetworkLatencyUpdate(NetPeer peer, int latency) { }
         public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) { }
-        
+
         public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channelNumber, DeliveryMethod deliveryMethod)
         {
             _netPacketProcessor.ReadAllPackets(reader, peer);
